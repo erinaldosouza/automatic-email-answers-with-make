@@ -1,0 +1,2581 @@
+{
+    "name": "Automatização de Alertas de Estoque (OUTLOOK)",
+    "flow": [
+        {
+            "id": 2,
+            "module": "microsoft-excel:listWorksheetRows",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 8880680
+            },
+            "mapper": {
+                "select": "legacy",
+                "selectB": "my",
+                "emptyRow": true,
+                "workbook": "/Planilha de mão na massa.xlsx",
+                "worksheet": "Estoque de produtos"
+            },
+            "metadata": {
+                "designer": {
+                    "x": -106,
+                    "y": -1,
+                    "name": "Planilha estoque"
+                },
+                "restore": {
+                    "expect": {
+                        "limit": {
+                            "empty": true
+                        },
+                        "select": {
+                            "label": "Select from the list"
+                        },
+                        "selectB": {
+                            "label": "My Drive"
+                        },
+                        "workbook": {
+                            "path": [
+                                "Planilha de mão na massa.xlsx"
+                            ]
+                        },
+                        "worksheet": {
+                            "mode": "chose",
+                            "label": "Estoque de produtos"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "azure"
+                            },
+                            "label": "Outlook Connection (Erinaldo Souza <erinaldo.sds@outlook.com>)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:azure",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Select a method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "manually",
+                                "legacy"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "emptyRow",
+                        "type": "boolean",
+                        "label": "Skip All Rows After a Blank Row",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit"
+                    },
+                    {
+                        "name": "selectB",
+                        "type": "select",
+                        "label": "Choose your OneDrive location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "my",
+                                "site",
+                                "group"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "workbook",
+                        "type": "file",
+                        "label": "Workbook",
+                        "required": true
+                    },
+                    {
+                        "name": "worksheet",
+                        "type": "select",
+                        "label": "Worksheet",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "__IMTLENGTH__",
+                        "type": "uinteger",
+                        "label": "Total number of bundles"
+                    },
+                    {
+                        "name": "__IMTINDEX__",
+                        "type": "uinteger",
+                        "label": "Bundle order position"
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "Row ID"
+                    },
+                    {
+                        "name": "row",
+                        "spec": [
+                            {
+                                "name": "a",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(A): Produto"
+                            },
+                            {
+                                "name": "b",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(B): Quantidade em Estoque"
+                            },
+                            {
+                                "name": "c",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(C): "
+                            },
+                            {
+                                "name": "d",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(D): "
+                            },
+                            {
+                                "name": "e",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(E): "
+                            },
+                            {
+                                "name": "f",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(F): "
+                            },
+                            {
+                                "name": "g",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(G): "
+                            },
+                            {
+                                "name": "h",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(H): "
+                            },
+                            {
+                                "name": "i",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(I): "
+                            },
+                            {
+                                "name": "j",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(J): "
+                            },
+                            {
+                                "name": "k",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(K): "
+                            },
+                            {
+                                "name": "l",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(L): "
+                            },
+                            {
+                                "name": "m",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(M): "
+                            },
+                            {
+                                "name": "n",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(N): "
+                            },
+                            {
+                                "name": "o",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(O): "
+                            },
+                            {
+                                "name": "p",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(P): "
+                            },
+                            {
+                                "name": "q",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(Q): "
+                            },
+                            {
+                                "name": "r",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(R): "
+                            },
+                            {
+                                "name": "s",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(S): "
+                            },
+                            {
+                                "name": "t",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(T): "
+                            },
+                            {
+                                "name": "u",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(U): "
+                            },
+                            {
+                                "name": "v",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(V): "
+                            },
+                            {
+                                "name": "w",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(W): "
+                            },
+                            {
+                                "name": "x",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(X): "
+                            },
+                            {
+                                "name": "y",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(Y): "
+                            },
+                            {
+                                "name": "z",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(Z): "
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Row"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "microsoft-excel:listWorksheetRows",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 8880680
+            },
+            "filter": {
+                "name": "Filtro de baixo estoque",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{2.row.b.value}}",
+                            "b": "3",
+                            "o": "number:lessorequal"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "select": "legacy",
+                "selectB": "my",
+                "emptyRow": true,
+                "workbook": "/Planilha de mão na massa.xlsx",
+                "worksheet": "Contato-estoque"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "Planilha contatos"
+                },
+                "restore": {
+                    "expect": {
+                        "limit": {
+                            "empty": true,
+                            "collapsed": true
+                        },
+                        "select": {
+                            "label": "Select from the list"
+                        },
+                        "selectB": {
+                            "label": "My Drive"
+                        },
+                        "workbook": {
+                            "path": [
+                                "Planilha de mão na massa.xlsx"
+                            ]
+                        },
+                        "worksheet": {
+                            "mode": "chose",
+                            "label": "Contato-estoque"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "azure"
+                            },
+                            "label": "Outlook Connection (Erinaldo Souza <erinaldo.sds@outlook.com>)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:azure",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Select a method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "manually",
+                                "legacy"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "emptyRow",
+                        "type": "boolean",
+                        "label": "Skip All Rows After a Blank Row",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit"
+                    },
+                    {
+                        "name": "selectB",
+                        "type": "select",
+                        "label": "Choose your OneDrive location",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "my",
+                                "site",
+                                "group"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "workbook",
+                        "type": "file",
+                        "label": "Workbook",
+                        "required": true
+                    },
+                    {
+                        "name": "worksheet",
+                        "type": "select",
+                        "label": "Worksheet",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "Row ID"
+                    },
+                    {
+                        "name": "row",
+                        "spec": [
+                            {
+                                "name": "a",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(A): Produto"
+                            },
+                            {
+                                "name": "b",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(B): Responsável (E-mail)"
+                            },
+                            {
+                                "name": "c",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(C): "
+                            },
+                            {
+                                "name": "d",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(D): "
+                            },
+                            {
+                                "name": "e",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(E): "
+                            },
+                            {
+                                "name": "f",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(F): "
+                            },
+                            {
+                                "name": "g",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(G): "
+                            },
+                            {
+                                "name": "h",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(H): "
+                            },
+                            {
+                                "name": "i",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(I): "
+                            },
+                            {
+                                "name": "j",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(J): "
+                            },
+                            {
+                                "name": "k",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(K): "
+                            },
+                            {
+                                "name": "l",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(L): "
+                            },
+                            {
+                                "name": "m",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(M): "
+                            },
+                            {
+                                "name": "n",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(N): "
+                            },
+                            {
+                                "name": "o",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(O): "
+                            },
+                            {
+                                "name": "p",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(P): "
+                            },
+                            {
+                                "name": "q",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(Q): "
+                            },
+                            {
+                                "name": "r",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(R): "
+                            },
+                            {
+                                "name": "s",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(S): "
+                            },
+                            {
+                                "name": "t",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(T): "
+                            },
+                            {
+                                "name": "u",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(U): "
+                            },
+                            {
+                                "name": "v",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(V): "
+                            },
+                            {
+                                "name": "w",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(W): "
+                            },
+                            {
+                                "name": "x",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(X): "
+                            },
+                            {
+                                "name": "y",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(Y): "
+                            },
+                            {
+                                "name": "z",
+                                "spec": [
+                                    {
+                                        "name": "formula",
+                                        "type": "text",
+                                        "label": "Formula"
+                                    },
+                                    {
+                                        "name": "formulaLocal",
+                                        "type": "text",
+                                        "label": "Formula Local"
+                                    },
+                                    {
+                                        "name": "numberFormat",
+                                        "type": "text",
+                                        "label": "Number Format"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Text"
+                                    },
+                                    {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value"
+                                    },
+                                    {
+                                        "name": "valueType",
+                                        "type": "text",
+                                        "label": "Value Type"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "(Z): "
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Row"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "util:TextAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 4,
+                "rowSeparator": "\n"
+            },
+            "mapper": {
+                "value": "|{{4.row.a.text}}|{{4.row.b.text}}|"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "Planilha contatos - List Worksheet Rows [4]"
+                        }
+                    },
+                    "parameters": {
+                        "rowSeparator": {
+                            "label": "New row"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "rowSeparator",
+                        "type": "select",
+                        "label": "Row separator",
+                        "validate": {
+                            "enum": [
+                                "\n",
+                                "\t",
+                                "other"
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "value",
+                        "type": "text",
+                        "label": "Text"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 6,
+            "module": "groq:createJSONChatCompletion",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 8880816
+            },
+            "mapper": {
+                "model": "llama-3.3-70b-versatile",
+                "userMessage": "Você é responsável por notificar setores responsávies pelo estoque de itens para uma loja. A regra de estoque da loja é: quando temos valores de itens abaixo ou igual a 3, é necessário fazer a reposição. Para a reposição é necessário enviar um e-mail para o setor responsável, sua missão é criar esse e-mail.\n\nAbaixo informações sobre os produtos que estão com baixa quantidade:\n\nProduto: {{2.row.a.text}}\nQuantidade em estoque: {{2.row.b.text}}\n\nAbaixo, a lista de contatos a depender do produto em falta:\n\n{{5.text}}\n\nDescubra qual o e-mail adequado para o contato.\n\nCrie um e-mail que notifica o setor responsável da situação atual e solicite a reposição dos itens o quanto antes. O e-mail deve ser profissional, objetivo e educado, não faça apresentação ou despedida. Use HTML para manter a estrutura adequada do e-mail. A COmposição do e-mail deve seguir a estrutura:\n\n[Texto de notificação da baixa quantidade do produto]\n[Texto de informações sobre o produto]\n\n[Texto de solicitação de reposição do estoque]",
+                "systemPrompt": "O JSON deverá conter informações suficientes para enviar o email de notificação conforme o estruturado:\n\n{\n  \"e-mail responsavel\": \"e-mail\",\n  \"Assunto\": \"Notificação de baixa no estoque!\",\n  \"Texto-mensagem\": \"Mensagem criada\"\n}\n\nO \"Assunto\" não deve ser alterado. Os valores das outras estruturas devem ser ajustados conforme a solicitação."
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "Criando o e-mail"
+                },
+                "restore": {
+                    "expect": {
+                        "model": {
+                            "mode": "chose",
+                            "label": "llama-3.3-70b-versatile"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "groq"
+                            },
+                            "label": "Grok"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:groq",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model",
+                        "required": true
+                    },
+                    {
+                        "name": "systemPrompt",
+                        "type": "text",
+                        "label": "System Prompt",
+                        "required": true
+                    },
+                    {
+                        "name": "userMessage",
+                        "type": "text",
+                        "label": "User Message",
+                        "required": true
+                    },
+                    {
+                        "name": "max_tokens",
+                        "type": "number",
+                        "label": "Max tokens returned"
+                    },
+                    {
+                        "name": "temperature",
+                        "type": "number",
+                        "label": "Temperature"
+                    },
+                    {
+                        "name": "top_p",
+                        "type": "number",
+                        "label": "Top P"
+                    },
+                    {
+                        "name": "frequency_penalty",
+                        "type": "number",
+                        "label": "Frequency Penalty"
+                    },
+                    {
+                        "name": "seed",
+                        "type": "number",
+                        "label": "Seed"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "module": "microsoft-email:createAMessage",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 8880680
+            },
+            "mapper": {
+                "content": "{{6.result.`Texto-mensagem`}}",
+                "subject": "{{6.result.Assunto}}",
+                "importance": "High",
+                "contentType": "html",
+                "toRecipients": [
+                    {
+                        "address": "{{6.result.`e-mail responsavel`}}"
+                    }
+                ],
+                "singleValueExtendedProperties": {}
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "replyTo": {
+                            "mode": "chose"
+                        },
+                        "importance": {
+                            "mode": "chose",
+                            "label": "High Priority"
+                        },
+                        "attachments": {
+                            "mode": "chose"
+                        },
+                        "contentType": {
+                            "mode": "chose",
+                            "label": "HTML"
+                        },
+                        "ccRecipients": {
+                            "mode": "chose"
+                        },
+                        "toRecipients": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        },
+                        "bccRecipients": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "azure"
+                            },
+                            "label": "Outlook Connection (Erinaldo Souza <erinaldo.sds@outlook.com>)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:azure",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "toRecipients",
+                        "spec": [
+                            {
+                                "name": "address",
+                                "type": "email",
+                                "label": "Email Address",
+                                "required": true
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "To Recipients"
+                    },
+                    {
+                        "name": "subject",
+                        "type": "text",
+                        "label": "Subject",
+                        "required": true
+                    },
+                    {
+                        "name": "content",
+                        "type": "text",
+                        "label": "Body Content",
+                        "required": true
+                    },
+                    {
+                        "name": "attachments",
+                        "spec": [
+                            {
+                                "name": "filename",
+                                "type": "filename",
+                                "label": "File Name",
+                                "required": true,
+                                "semantic": "file:name"
+                            },
+                            {
+                                "name": "data",
+                                "type": "buffer",
+                                "label": "Data",
+                                "required": true,
+                                "semantic": "file:data"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Attachments"
+                    },
+                    {
+                        "name": "replyTo",
+                        "spec": [
+                            {
+                                "name": "address",
+                                "type": "email",
+                                "label": "Email Address",
+                                "required": true
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Reply To"
+                    },
+                    {
+                        "name": "ccRecipients",
+                        "spec": [
+                            {
+                                "name": "address",
+                                "type": "email",
+                                "label": "Email Address",
+                                "required": true
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "CC Recipients"
+                    },
+                    {
+                        "name": "bccRecipients",
+                        "spec": [
+                            {
+                                "name": "address",
+                                "type": "email",
+                                "label": "Email Address",
+                                "required": true
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Bcc Recipients"
+                    },
+                    {
+                        "name": "importance",
+                        "type": "select",
+                        "label": "Importance",
+                        "validate": {
+                            "enum": [
+                                "Low",
+                                "Normal",
+                                "High"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "contentType",
+                        "type": "select",
+                        "label": "Body Content Type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "html",
+                                "text"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "singleValueExtendedProperties",
+                        "spec": [
+                            {
+                                "name": "sensitivityLabel",
+                                "type": "text",
+                                "label": "Sensitivity Label"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Extended MAPI Properties"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": []
+    }
+}
