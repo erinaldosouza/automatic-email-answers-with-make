@@ -4,10 +4,10 @@ This repository contains exported .json Make blueprint files used to automate wo
 The blueprints can be imported directly into Make to review, execute, customize, and extend the automation scenarios.
 
 # Repository Structure
-.
-├── blueprints/
-│   ├── scenario-01.json
-│   └── ...
+
+├── blueprints/\
+│   ├── scenario-01.json\
+│   └── ...\
 └── README.md
 
 Each .json file represents a Make scenario blueprint.
